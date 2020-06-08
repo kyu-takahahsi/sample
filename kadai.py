@@ -155,7 +155,7 @@ def confirm():
 """
 
 #10章課題3
-"""
+
 #チェックされたハンドを送信
 @app.route("/kadai3")
 def kadai3_post(my_hand="", your_hand="", result=""):
@@ -174,7 +174,7 @@ def post():
         result = "Win"
     return kadai3_post(my_hand, your_hand, result)
 
-"""
+
 
 
 
