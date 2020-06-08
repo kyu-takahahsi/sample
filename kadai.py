@@ -99,10 +99,7 @@ def send_name():
 
 #入力された名前、性別、チェックを送信
 @app.route("/kadai1", methods=["GET"])
-def kadai1_post(name,gender,mail):
-    name = request.form.get("name", "")
-    gender = request.form.get("gender", "")
-    mail = request.form.get("mail", "")
+def kadai1_post(name="", gender="", mail=""):
     return render_template('kadai1.html', name=name, gender=gender, mail=mail)
 
 #入力された名前、性別、チェックを受信
