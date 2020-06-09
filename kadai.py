@@ -186,7 +186,7 @@ def post():
 def mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    passwd   = 'git上では伏せます'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     goods = []
@@ -217,7 +217,7 @@ def mysql_select():
 def mysql_sample():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    passwd   = 'git上では伏せます'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     order = ""
@@ -258,7 +258,7 @@ def mysql_change():
     # import部分は省略
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    passwd   = 'git上では伏せます'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     try:
@@ -286,7 +286,7 @@ def mysql_change():
 def challenge_mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    passwd   = 'git上では伏せます'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     params = {
@@ -300,7 +300,7 @@ def challenge_mysql_select():
         cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
         cursor = cnx.cursor()
 
-        query = 'SELECT emp_id, emp_name, job, age FROM emp_table'+ order
+        query = 'SELECT emp_id, emp_name, job, age FROM emp_table　WHERE job='+ order
         cursor.execute(query)
         job = []
         for (emp_id, emp_name, job, age ) in cursor:
