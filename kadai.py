@@ -1,9 +1,15 @@
 #共通
 from flask import Flask
 app = Flask(__name__)
+#HTMLに反映
 from flask import render_template
+#HTMLから抽出
 from flask import request
+#ランダム選択
 import random
+#データベース操作
+import mysql.connector
+from mysql.connector import errorcode
 
 #7章ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 """
@@ -150,11 +156,11 @@ def confirm():
       result = request.form
       return render_template("confirm.html",result = result)
 """
-
+"""
 #10章課題3
 
 #チェックされたハンドを送信
-@app.route("/kadai3")
+@app.route("/kadai3", methods=["GET"])
 def kadai3_post(my_hand="", your_hand="", result=""):
     return render_template('kadai3.html', my_hand=my_hand, your_hand=your_hand, result=result)
 
@@ -170,11 +176,156 @@ def post():
     else:
         result = "Win"
     return kadai3_post(my_hand, your_hand, result)
+"""
 
 
+#12章
+"""
+#例
+@app.route("/mysql_select")
+def mysql_select():
+    host = 'localhost' # データベースのホスト名又はIPアドレス
+    username = 'root'  # MySQLのユーザ名
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    dbname   = 'mydb'    # データベース名
+
+    goods = []
+    try:
+        cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
+        cursor = cnx.cursor()
+        query = 'SELECT goods_id, goods_name, price FROM goods_table'
+        cursor.execute(query)
+
+        for (id, name, price) in cursor:
+            item = {"goods_id":id, "goods_name":name, "price":price}
+            goods.append(item)
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("ユーザ名かパスワードに問題があります。")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("データベースが存在しません。")
+        else:
+            print(err)
+    else:
+        cnx.close()
+    return render_template("goods.html", goods = goods)
+"""
+
+"""
+@app.route("/mysql_sample")
+def mysql_sample():
+    host = 'localhost' # データベースのホスト名又はIPアドレス
+    username = 'root'  # MySQLのユーザ名
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    dbname   = 'mydb'    # データベース名
+
+    order = ""
+    if "order" in request.args.keys() :
+            order = request.args.get("order")
+
+    try:
+        cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
+        cursor = cnx.cursor()
+
+        query = 'SELECT goods_name, price FROM goods_table ORDER BY price ' + order
+        cursor.execute(query)
+        goods = []
+        for (name, price) in cursor:
+            item = {"name": name, "price":price}
+            goods.append(item)
+        params = {
+        "asc_check" : order == "ASC",
+        "desc_check" : order == "DESC",
+        "goods" : goods
+        }
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("ユーザ名かパスワードに問題があります。")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("データベースが存在しません。")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+    return render_template("goods.html", **params)
+"""
+
+"""
+@app.route("/mysql_change")
+def mysql_change():
+    # import部分は省略
+    host = 'localhost' # データベースのホスト名又はIPアドレス
+    username = 'root'  # MySQLのユーザ名
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    dbname   = 'mydb'    # データベース名
+
+    try:
+        cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
+        cursor = cnx.cursor()
+        query = "INSERT INTO goods_table(goods_name, price) VALUES('ボールペン', 80)"
+        cursor.execute(query)
+        cnx.commit() # この処理が無いと変更が反映されません！
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("ユーザ名かパスワードに問題があります。")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("データベースが存在しません。")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+    return "終了"
+"""
 
 
+@app.route("/mysql_kadai")
+def challenge_mysql_select():
+    host = 'localhost' # データベースのホスト名又はIPアドレス
+    username = 'root'  # MySQLのユーザ名
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    dbname   = 'mydb'    # データベース名
 
+    params = {
+    }
+
+    order = ""
+    if "order" in request.args.keys():
+            order = request.args.get("order")
+
+    try:
+        cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
+        cursor = cnx.cursor()
+
+        query = 'SELECT emp_id, emp_name, job, age FROM emp_table'+ order
+        cursor.execute(query)
+        job = []
+        for (emp_id, emp_name, job, age ) in cursor:
+            item = { "emp_id": emp_id, "emp_name": emp_name, "job": job, "age": age}
+            job.append(item)
+
+        params = {
+        "manager_check" : order == "manager",
+        "analyst_check" : order == "analyst",
+        "CTO_check" : order == "CTO",
+        "clerk_check" : order == "clerk",
+        "job" : job
+        }
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("ユーザ名かパスワードに問題があります。")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("データベースが存在しません。")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+    return render_template("goods.html", **params)
 
 
 

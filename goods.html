@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+   <meta charset="UTF-8">
+   <title>サンプル</title>
+   <style type="text/css">
+       table, td, th {
+           border: solid black 1px;
+       }
+       table {
+           width: 200px;
+       }
+   </style>
+</head>
+<body>
+    <h2>表示する職種を選択してください</h2>
+    <form method="get">
+        <select name="order">
+        <option value="">全員</option>
+        <option value="manager">マネージャー</option>{% if manager_check %} checked {% endif %}>マネージャー
+        <option value="analyst">アナリスト</option>{% if analyst_check %} checked {% endif %}>アナリスト
+        <option value="CTO">CTO</option>{% if CTO_check %} checked {% endif %}>CTO
+        <option value="clerk">一般職</option>{% if clerk_check %} checked {% endif %}>一般職
+        </select>
+        <input type="submit" value="表示">
+   <h3>社員一覧</h3>
+   <table>
+       <tr>
+           <th>社員番号</th>
+           <th>名前</th>
+           <th>職種</th>
+           <th>年齢</th>
+       </tr>
+
+       {% for item in goods %}
+       <tr>
+            <td> {{ item.emp_id }} </td>
+            <td> {{ item.emp_name }} </td>
+            <td>{{ item.job }}</td>
+            <td> {{ item.age }} </td>
+       </tr>
+       {% endfor %}
+    </table>
+</body>
+</html>
