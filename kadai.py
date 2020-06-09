@@ -281,7 +281,7 @@ def mysql_change():
     return "終了"
 """
 
-
+#12章課題1
 @app.route("/mysql_kadai")
 def challenge_mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
