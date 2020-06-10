@@ -300,7 +300,7 @@ def challenge_mysql_select():
         if order == "":
             query = "select * from emp_table;"
         else:
-            query = f"select * from emp_table where job = '{order}' order; "
+            query = f"select * from emp_table where job = '{order}'; "
         print(query)
 
         cursor.execute(query)
