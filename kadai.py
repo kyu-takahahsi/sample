@@ -300,7 +300,7 @@ def challenge_mysql_select():
         if order == "":
             query = "select * from emp_table;"
         else:
-            query = f"select * from emp_table where job = '{order}'; "
+            query = f"select * from emp_table where job = '{order}' order; "
         print(query)
 
         cursor.execute(query)
@@ -314,7 +314,7 @@ def challenge_mysql_select():
         "manager_check" : order == "manager",
         "analyst_check" : order == "analyst",
         "clerk_check" : order == "clerk",
-        "job" : jobs
+        "jobs" : jobs
         }
 
     except mysql.connector.Error as err:
@@ -328,7 +328,7 @@ def challenge_mysql_select():
         cnx.close()
 
     return render_template("goods.html", **params)
- 
+
 
 
 
