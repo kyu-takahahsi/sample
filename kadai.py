@@ -156,9 +156,9 @@ def confirm():
       result = request.form
       return render_template("confirm.html",result = result)
 """
+
 """
 #10章課題3
-
 #チェックされたハンドを送信
 @app.route("/kadai3", methods=["GET"])
 def kadai3_post(my_hand="", your_hand="", result=""):
@@ -186,7 +186,7 @@ def post():
 def mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'git上では伏せます'    # MySQLのパスワード
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     goods = []
@@ -217,7 +217,7 @@ def mysql_select():
 def mysql_sample():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'git上では伏せます'    # MySQLのパスワード
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     order = ""
@@ -258,7 +258,7 @@ def mysql_change():
     # import部分は省略
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'git上では伏せます'    # MySQLのパスワード
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
 
     try:
@@ -286,11 +286,8 @@ def mysql_change():
 def challenge_mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
     username = 'root'  # MySQLのユーザ名
-    passwd   = 'git上では伏せます'    # MySQLのパスワード
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
     dbname   = 'mydb'    # データベース名
-
-    params = {
-    }
 
     order = ""
     if "order" in request.args.keys():
@@ -300,19 +297,24 @@ def challenge_mysql_select():
         cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
         cursor = cnx.cursor()
 
-        query = 'SELECT emp_id, emp_name, job, age FROM emp_table　WHERE job='+ order
+        if order == "":
+            query = "select * from emp_table;"
+        else:
+            query = f"select * from emp_table where job = '{order}'; "
+        print(query)
+
         cursor.execute(query)
-        job = []
+        jobs = []
         for (emp_id, emp_name, job, age ) in cursor:
             item = { "emp_id": emp_id, "emp_name": emp_name, "job": job, "age": age}
-            job.append(item)
+            jobs.append(item)
 
         params = {
+        "all_check" : order == "",
         "manager_check" : order == "manager",
         "analyst_check" : order == "analyst",
-        "CTO_check" : order == "CTO",
         "clerk_check" : order == "clerk",
-        "job" : job
+        "job" : jobs
         }
 
     except mysql.connector.Error as err:
@@ -326,6 +328,10 @@ def challenge_mysql_select():
         cnx.close()
 
     return render_template("goods.html", **params)
+ 
+
+
+
 
 
 
