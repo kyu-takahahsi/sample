@@ -282,6 +282,7 @@ def mysql_change():
 """
 
 #12章課題1
+"""
 @app.route("/mysql_kadai")
 def challenge_mysql_select():
     host = 'localhost' # データベースのホスト名又はIPアドレス
@@ -300,7 +301,7 @@ def challenge_mysql_select():
         if order == "":
             query = "select * from emp_table;"
         else:
-            query = f"select * from emp_table where job = '{order}'; "
+            query = f"select * from emp_table where job = '{order}' order; "
         print(query)
 
         cursor.execute(query)
@@ -328,9 +329,69 @@ def challenge_mysql_select():
         cnx.close()
 
     return render_template("goods.html", **params)
+"""
+
+#12章課題2
+@app.route("/mysql_kadai")
+def mysql_sample():
+    host = 'localhost' # データベースのホスト名又はIPアドレス
+    username = 'root'  # MySQLのユーザ名
+    passwd   = 'kaA1ybB2ucC3d2c'    # MySQLのパスワード
+    dbname   = 'mydb'    # データベース名
+
+    add_name = ""
+    add_price = ""
+
+    if "add_name" in request.args.keys() and "add_price" in request.args.keys():
+        add_name = request.args.get("add_name")
+        add_price = request.args.get("add_price")
+        print("値：入っています")
+
+    else:
+        print("値：入っていません")
 
 
+    try:
+        cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
+        cursor = cnx.cursor()
 
+        query = 'SELECT goods_name, price FROM goods_table'
+
+        if add_name == "" and add_price =="":
+            cursor.execute(query)
+            print("SQL:値が入っていないので実行できません")
+
+        elif add_name.isdecimal() != True and add_price.isdecimal()== True:
+            add_query = f"INSERT INTO goods_table (goods_name, price) VALUES ('{add_name}', '{add_price}')"
+            cursor.execute(add_query)
+            cnx.commit()
+            cursor.execute(query)
+            print("商品：追加完了")
+
+        else:
+            cursor.execute(query)
+            print("商品：追加失敗")
+
+        goods = []
+        for (name, price) in cursor:
+            item = {"name": name, "price":price}
+            goods.append(item)
+
+        params = {
+        "goods" : goods
+        }
+
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("ユーザ名かパスワードに問題があります。")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("データベースが存在しません。")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+    return render_template("goods_add.html", **params)
 
 
 
