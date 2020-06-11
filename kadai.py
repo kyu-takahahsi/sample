@@ -341,12 +341,15 @@ def mysql_sample():
 
     add_name = ""
     add_price = ""
+    judge = ""
 
+    #空欄に値が入力されていたら取得
     if "add_name" in request.args.keys() and "add_price" in request.args.keys():
         add_name = request.args.get("add_name")
         add_price = request.args.get("add_price")
         print("値：入っています")
 
+    #空欄のままなら何もしない
     else:
         print("値：入っていません")
 
@@ -354,13 +357,14 @@ def mysql_sample():
     try:
         cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
         cursor = cnx.cursor()
-        
+
         #どんな場合でも実行するSQL
         query = 'SELECT goods_name, price FROM goods_table'
 
         #空欄の場合
         if add_name == "" and add_price =="":
             cursor.execute(query)
+            judge = "追加したい商品の名前と価格を入力してください"
             print("SQL:値が入っていないので実行できません")
 
         #条件通りadd_nameが文字列、add_priceが数字の場合
@@ -369,11 +373,13 @@ def mysql_sample():
             cursor.execute(add_query)
             cnx.commit()
             cursor.execute(query)
+            judge = "追加成功"
             print("商品：追加完了")
 
         #条件に当てはまらない場合
         else:
             cursor.execute(query)
+            judge = "追加失敗"
             print("商品：追加失敗")
 
 
@@ -383,6 +389,7 @@ def mysql_sample():
             goods.append(item)
 
         params = {
+        "judge" : judge,
         "goods" : goods
         }
 
