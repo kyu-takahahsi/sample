@@ -354,23 +354,28 @@ def mysql_sample():
     try:
         cnx = mysql.connector.connect(host=host, user=username, password=passwd, database=dbname)
         cursor = cnx.cursor()
-
+        
+        #どんな場合でも実行するSQL
         query = 'SELECT goods_name, price FROM goods_table'
 
+        #空欄の場合
         if add_name == "" and add_price =="":
             cursor.execute(query)
             print("SQL:値が入っていないので実行できません")
 
-        elif add_name.isdecimal() != True and add_price.isdecimal()== True:
+        #条件通りadd_nameが文字列、add_priceが数字の場合
+        elif (add_name.isdecimal() != True) and (add_price.isdecimal()== True):
             add_query = f"INSERT INTO goods_table (goods_name, price) VALUES ('{add_name}', '{add_price}')"
             cursor.execute(add_query)
             cnx.commit()
             cursor.execute(query)
             print("商品：追加完了")
 
+        #条件に当てはまらない場合
         else:
             cursor.execute(query)
             print("商品：追加失敗")
+
 
         goods = []
         for (name, price) in cursor:
